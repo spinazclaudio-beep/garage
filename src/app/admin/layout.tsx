@@ -61,7 +61,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = rawNavItems.filter(item => {
-    if (item.id === 'configuracion') return userProfile?.id === '734a51e1-194a-466c-b2a9-a324f8a52a27'; 
+    if (item.id === 'configuracion') return userProfile?.role === 'admin'; 
     const c = config.find(m => m.module_name === item.id);
     return c ? c.is_enabled : true; 
   });
@@ -188,13 +188,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               
               <div className="pt-2 text-center border-t border-white/5 space-y-1">
                 <p className="text-[9px] text-zinc-600 font-bold">
-                  © 2026 Omar Adamo
+                  © 2026 Spinaz Garage. Todos los derechos reservados.
                 </p>
                 <div className="flex justify-center gap-3 text-[8px] text-zinc-500">
-                  <a href="mailto:adamoomar110@gmail.com" className="hover:text-yellow-500 transition-colors">Email</a>
-                  <span>•</span>
-                  <a href="https://wa.me/5491178295317" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-500 transition-colors">WhatsApp</a>
-                  <span>•</span>
                   <span className="font-black text-zinc-700">v1.0</span>
                 </div>
               </div>
@@ -281,19 +277,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <LogOut size={20} />
             <span className="font-bold text-sm">Cerrar Sesión</span>
           </button>
-          
-          <div className="pt-2 text-center border-t border-white/5 space-y-2">
-            <p className="text-[10px] text-zinc-500 font-bold tracking-tight">
-              © 2026 Omar Adamo. Todos los derechos reservados.
-            </p>
-            <div className="flex justify-center gap-4 text-[9px] text-zinc-500 font-medium">
-              <a href="mailto:adamoomar110@gmail.com" className="hover:text-yellow-500 transition-colors">Email</a>
-              <span>•</span>
-              <a href="https://wa.me/5491178295317" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-500 transition-colors">WhatsApp</a>
-              <span>•</span>
-              <span className="text-zinc-600 font-black">v1.0</span>
+                    <div className="pt-2 text-center border-t border-white/5 space-y-2">
+              <p className="text-[10px] text-zinc-500 font-bold tracking-tight">
+                © 2026 Spinaz Garage. Todos los derechos reservados.
+              </p>
+              <div className="flex justify-center gap-4 text-[9px] text-zinc-500 font-medium">
+                <span className="text-zinc-600 font-black">v1.0</span>
+              </div>
             </div>
-          </div>
         </div>
       </aside>
 
