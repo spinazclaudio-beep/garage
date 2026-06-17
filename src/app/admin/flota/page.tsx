@@ -68,8 +68,9 @@ export default function FlotaAdmin() {
       plate: newVehicle.plate,
       brand: newVehicle.brand,
       model: newVehicle.model,
-      name: `${newVehicle.brand} ${newVehicle.model}`, // Requerido por la base de datos remota
-      status: newVehicle.status
+      year: newVehicle.year,
+      status: newVehicle.status,
+      metrics: { color: newVehicle.color }
     };
 
     try {
