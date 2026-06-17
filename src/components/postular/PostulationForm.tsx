@@ -74,7 +74,20 @@ export default function PostulationForm() {
         }
       }
 
-      // 2. Insert into database
+      // 2. Insert into database - columnas reales: full_name, dni, age, phone, zone, status
+      // Los datos extra del perfil se combinan en el campo zone como texto
+      const zoneConPerfil = [
+        `Zona: ${formData.zone}`,
+        `Exp: ${formData.app_experience}`,
+        `Siniestros: ${formData.accident_history}`,
+        `Registro Prof.: ${formData.has_professional_license ? 'SI' : 'NO'}`,
+        `Adelanto: ${formData.can_pay_advance ? 'SI' : 'NO'}`,
+        fileUrls.dni_front ? `DNI-F:${fileUrls.dni_front}` : null,
+        fileUrls.dni_back ? `DNI-D:${fileUrls.dni_back}` : null,
+        fileUrls.license ? `REG:${fileUrls.license}` : null,
+        fileUrls.selfie ? `FOTO:${fileUrls.selfie}` : null,
+      ].filter(Boolean).join(' || ');
+
       const { error } = await supabase
         .from('applicants')
         .insert([{
@@ -82,15 +95,7 @@ export default function PostulationForm() {
           dni: formData.dni,
           phone: formData.phone,
           age: parseInt(formData.age),
-          zone: formData.zone,
-          app_experience: formData.app_experience,
-          accident_history: formData.accident_history,
-          has_professional_license: formData.has_professional_license,
-          can_pay_advance: formData.can_pay_advance,
-          dni_front_url: fileUrls.dni_front,
-          dni_back_url: fileUrls.dni_back,
-          license_url: fileUrls.license,
-          selfie_url: fileUrls.selfie,
+          zone: zoneConPerfil,
           status: 'pending'
         }]);
         
@@ -305,7 +310,7 @@ export default function PostulationForm() {
       </main>
       
       <footer className="py-12 px-6 text-center text-zinc-700 text-[10px] font-bold uppercase tracking-[0.3em]">
-        Spinaz Garage &copy; 2025 - Sistema de Reclutamiento de Elite
+        © 2026 Omar Adamo. Todos los derechos reservados. v1.2
       </footer>
     </div>
   );

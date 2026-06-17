@@ -115,7 +115,7 @@ export default function PostulantesAdmin() {
                     </span>
                   </div>
                   <div className="flex justify-between items-center text-xs text-zinc-500">
-                    <span>📍 {app.zone}</span>
+                    <span className="truncate max-w-[200px]">📍 {app.zone?.split(' || ')[0]?.replace('Zona: ', '') || app.zone}</span>
                     <span>{new Date(app.created_at).toLocaleDateString()}</span>
                   </div>
                 </button>
@@ -161,11 +161,15 @@ export default function PostulantesAdmin() {
                  <div className="grid grid-cols-2 gap-6">
                     <div className="bg-black/40 p-6 rounded-3xl border border-white/5">
                        <h4 className="text-yellow-500 font-black text-[10px] uppercase tracking-widest mb-3">Experiencia Apps</h4>
-                       <p className="text-sm text-zinc-300 font-medium leading-relaxed">{selectedApplicant.app_experience}</p>
+                       <p className="text-sm text-zinc-300 font-medium leading-relaxed">
+                         {selectedApplicant.zone ? (selectedApplicant.zone.split(' || ').find((p: string) => p.startsWith('Exp: '))?.replace('Exp: ', '') || 'No especificado') : 'No especificado'}
+                       </p>
                     </div>
                     <div className="bg-black/40 p-6 rounded-3xl border border-white/5">
                        <h4 className="text-red-500 font-black text-[10px] uppercase tracking-widest mb-3">Siniestros</h4>
-                       <p className="text-sm text-zinc-300 font-medium leading-relaxed">{selectedApplicant.accident_history}</p>
+                       <p className="text-sm text-zinc-300 font-medium leading-relaxed">
+                         {selectedApplicant.zone ? (selectedApplicant.zone.split(' || ').find((p: string) => p.startsWith('Siniestros: '))?.replace('Siniestros: ', '') || 'No especificado') : 'No especificado'}
+                       </p>
                     </div>
                  </div>
               </div>
@@ -189,10 +193,26 @@ export default function PostulantesAdmin() {
                  <p className="text-[10px] text-green-500 font-black uppercase tracking-widest text-center">Copiá este texto y pegalo en WhatsApp para avanzar con autoridad profesional.</p>
               </div>
 
-              {/* DOCUMENTOS */}
+              {/* DOCUMENTOS Y PERFIL */}
               <div className="grid grid-cols-4 gap-4">
                 {DOCS.map((doc) => {
-                  const url = selectedApplicant[doc.urlKey];
+                  const zoneParts = selectedApplicant.zone ? selectedApplicant.zone.split(' || ') : [];
+                  const exp = zoneParts.find((p: string) => p.startsWith('Exp: '))?.replace('Exp: ', '') || 'No especificado';
+                  const siniestros = zoneParts.find((p: string) => p.startsWith('Siniestros: '))?.replace('Siniestros: ', '') || 'No especificado';
+                  const dniF = zoneParts.find((p: string) => p.startsWith('DNI-F:'))?.replace('DNI-F:', '');
+                  const dniD = zoneParts.find((p: string) => p.startsWith('DNI-D:'))?.replace('DNI-D:', '');
+                  const reg = zoneParts.find((p: string) => p.startsWith('REG:'))?.replace('REG:', '');
+                  const foto = zoneParts.find((p: string) => p.startsWith('FOTO:'))?.replace('FOTO:', '');
+                  
+                  const urlMap: Record<string, string | undefined> = {
+                     dni_front_url: dniF,
+                     dni_back_url: dniD,
+                     license_url: reg,
+                     selfie_url: foto
+                  };
+                  
+                  const url = urlMap[doc.urlKey];
+
                   return (
                     <div key={doc.urlKey} className="aspect-square bg-zinc-900/50 border border-white/5 rounded-3xl overflow-hidden hover:border-yellow-500/30 transition-all group relative">
                       {url ? (
