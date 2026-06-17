@@ -60,24 +60,7 @@ export default function ConfiguracionAdmin() {
     setLoading(false);
   };
 
-  const saveSettings = async () => {
-    setSavingSettings(true);
-    const updates = Object.entries(systemSettings).map(([key, value]) => ({
-      key,
-      value: value as string,
-      updated_at: new Date()
-    }));
-
-    for (const update of updates) {
-      await supabase
-        .from('system_settings')
-        .upsert(update, { onConflict: 'key' });
-    }
-    
-    setSavingSettings(false);
-    alert('Configuración de marca actualizada con éxito');
-    window.location.reload(); 
-  };
+  // saveSettings deshabilitada - pendiente de configuración de marca
 
   const toggleModule = async (id: string, currentStatus: boolean) => {
     const { error } = await supabase
@@ -146,68 +129,35 @@ export default function ConfiguracionAdmin() {
       <div className="flex-1 overflow-y-auto p-12 z-10">
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
           
-          {/* SECCIÓN MARCA BLANCA */}
-          <div className="space-y-8 lg:col-span-2 bg-zinc-900/20 p-10 rounded-[3rem] border border-white/5 shadow-2xl">
+          {/* SECCIÓN MARCA BLANCA - PENDIENTE */}
+          <div className="space-y-8 lg:col-span-2 bg-zinc-900/20 p-10 rounded-[3rem] border border-yellow-500/10 shadow-2xl">
             <div className="flex items-center gap-4 mb-6">
                <div className="w-14 h-14 bg-yellow-500/10 rounded-2xl flex items-center justify-center border border-yellow-500/20">
                   <RefreshCw className="text-yellow-500" />
                </div>
                <div>
                   <h3 className="text-2xl font-black text-white italic">Personalización de Marca</h3>
-                  <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Configura tu propia marca blanca para revender el sistema</p>
+                  <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Configura el nombre y logo de tu empresa</p>
                </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="space-y-3">
-                <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest pl-2">Nombre de la Empresa</label>
-                <input 
-                  type="text" 
-                  value={systemSettings.brand_name} 
-                  onChange={e => setSystemSettings({...systemSettings, brand_name: e.target.value})} 
-                  className="w-full bg-black/50 border border-white/10 rounded-2xl p-4 text-white outline-none focus:border-yellow-500 font-bold" 
-                  placeholder="Ej: Spinaz Garage" 
-                />
+            <div className="bg-yellow-500/5 border border-yellow-500/20 rounded-2xl p-8 flex items-start gap-6">
+              <div className="w-12 h-12 bg-yellow-500/10 rounded-xl flex items-center justify-center shrink-0 mt-1">
+                <RefreshCw className="text-yellow-500" size={22} />
               </div>
-
-              <div className="space-y-3">
-                <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest pl-2">URL del Logo (PNG/SVG)</label>
-                <input 
-                  type="text" 
-                  value={systemSettings.brand_logo} 
-                  onChange={e => setSystemSettings({...systemSettings, brand_logo: e.target.value})} 
-                  className="w-full bg-black/50 border border-white/10 rounded-2xl p-4 text-white outline-none focus:border-yellow-500 font-bold" 
-                  placeholder="https://.../logo.png" 
-                />
-              </div>
-
-              <div className="space-y-3">
-                <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest pl-2">Color Principal</label>
-                <div className="flex gap-3">
-                  <input 
-                    type="color" 
-                    value={systemSettings.primary_color} 
-                    onChange={e => setSystemSettings({...systemSettings, primary_color: e.target.value})} 
-                    className="w-16 h-14 bg-black/50 border border-white/10 rounded-2xl p-1 cursor-pointer" 
-                  />
-                  <input 
-                    type="text" 
-                    value={systemSettings.primary_color} 
-                    onChange={e => setSystemSettings({...systemSettings, primary_color: e.target.value})} 
-                    className="flex-1 bg-black/50 border border-white/10 rounded-2xl p-4 text-white outline-none focus:border-yellow-500 font-bold" 
-                  />
+              <div className="space-y-2">
+                <p className="font-black text-yellow-400 uppercase tracking-widest text-sm">Nombre de la App — Pendiente de Configuración</p>
+                <p className="text-zinc-400 text-sm leading-relaxed">
+                  El nombre y logo de la plataforma aún no han sido definidos. Una vez que decidas el nombre de tu empresa o sistema, contactá al desarrollador para activar esta sección y configurar tu marca blanca completa.
+                </p>
+                <div className="flex flex-wrap gap-3 mt-4">
+                  <a href="mailto:adamoomar110@gmail.com" className="px-5 py-2.5 bg-yellow-500 text-black font-black text-xs rounded-xl hover:bg-yellow-400 transition-all">
+                    📧 Contactar al Desarrollador
+                  </a>
+                  <a href="https://wa.me/5491178295317" target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 bg-white/5 text-white font-black text-xs rounded-xl border border-white/10 hover:bg-white/10 transition-all">
+                    💬 WhatsApp
+                  </a>
                 </div>
-              </div>
-
-              <div className="flex items-end">
-                <button 
-                  onClick={saveSettings}
-                  disabled={savingSettings}
-                  className="w-full h-14 bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-black rounded-2xl shadow-xl shadow-yellow-500/10 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
-                >
-                  {savingSettings ? <RefreshCw className="animate-spin" /> : <Save size={18} />}
-                  GUARDAR MARCA BLANCA
-                </button>
               </div>
             </div>
           </div>
