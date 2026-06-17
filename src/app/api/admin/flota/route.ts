@@ -100,19 +100,19 @@ export async function PUT(req: Request) {
         emoji = '🧽';
       }
 
-      // Crear Orden de Servicio
-      const { error: sError } = await supabaseAdmin.from('service_orders').insert([{
+      // Crear registro en tabla maintenance (equivale a la orden de servicio)
+      const { error: sError } = await supabaseAdmin.from('maintenance').insert([{
         vehicle_id: id,
-        provider_type: providerType,
-        appointment_date: cleanDate,
-        budget: cleanBudget,
-        description: description || `Envío automático a ${placeName}`,
+        type: providerType,
+        date: cleanDate || new Date().toISOString(),
+        cost: cleanBudget || 0,
+        description: description || `Envio automatico a ${placeName}`,
         status: 'pending'
       }]);
 
       if (sError) {
-        console.error('Error creando service_order:', sError.message);
-        throw new Error('Error al crear la orden de servicio: ' + sError.message);
+        console.error('Error creando registro maintenance:', sError.message);
+        throw new Error('Error al crear el registro de servicio: ' + sError.message);
       }
 
       // Buscar chofer asignado a esta unidad

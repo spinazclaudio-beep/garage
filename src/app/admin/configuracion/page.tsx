@@ -97,7 +97,7 @@ export default function ConfiguracionAdmin() {
     
     setSaving(true);
     try {
-      await supabase.from('service_orders').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      await supabase.from('maintenance').delete().neq('id', '00000000-0000-0000-0000-000000000000');
       await supabase.from('payments').delete().neq('id', '00000000-0000-0000-0000-000000000000');
       await supabase.from('announcements').delete().neq('id', '00000000-0000-0000-0000-000000000000');
       await supabase.from('vehicles').delete().neq('id', '00000000-0000-0000-0000-000000000000');

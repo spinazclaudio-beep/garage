@@ -26,7 +26,7 @@ export default function TallerAdmin() {
     try {
       const [vRes, sRes] = await Promise.all([
         fetch('/api/admin/flota'),
-        supabase.from('service_orders').select('*').eq('provider_type', 'taller').eq('status', 'pending')
+        supabase.from('maintenance').select('*').eq('type', 'taller').eq('status', 'pending')
       ]);
       
       const fleetData = await vRes.json();
@@ -47,8 +47,8 @@ export default function TallerAdmin() {
     setSelectedVehicle(vehicle);
     setLoadingHistory(true);
     try {
-      const { data, error } = await supabase
-        .from('service_orders')
+      const { data } = await supabase
+        .from('maintenance')
         .select('*')
         .eq('vehicle_id', vehicle.id)
         .order('created_at', { ascending: false });
@@ -68,7 +68,7 @@ export default function TallerAdmin() {
     return date >= from && date <= to;
   });
 
-  const totalSpent = filteredHistory.reduce((acc, curr) => acc + Number(curr.budget || 0), 0);
+  const totalSpent = filteredHistory.reduce((acc, curr) => acc + Number(curr.cost || 0), 0);
 
   const handleSetReady = async (id: string) => {
     try {
@@ -78,8 +78,7 @@ export default function TallerAdmin() {
         body: JSON.stringify({ id, status: 'active' })
       });
       if (res.ok) {
-        // También marcar la orden como finalizada
-        await supabase.from('service_orders').update({ status: 'completed' }).eq('vehicle_id', id).eq('provider_type', 'taller');
+        await supabase.from('maintenance').update({ status: 'done' }).eq('vehicle_id', id).eq('type', 'taller');
         fetchData();
       }
     } catch (err) {
@@ -161,7 +160,7 @@ export default function TallerAdmin() {
                                      <Calendar size={12} /> Turno
                                   </div>
                                   <span className="text-xs font-bold text-white">
-                                     {order?.appointment_date ? new Date(order.appointment_date).toLocaleDateString() : 'N/A'}
+                                     {order?.date ? new Date(order.date).toLocaleDateString() : 'N/A'}
                                   </span>
                                </div>
                                <div className="p-4 bg-black/40 rounded-2xl border border-white/5 flex flex-col gap-1">
@@ -169,7 +168,7 @@ export default function TallerAdmin() {
                                      <DollarSign size={12} /> Presupuesto
                                   </div>
                                   <span className="text-xs font-bold text-yellow-500">
-                                     ${order?.budget || '0.00'}
+                                     ${order?.cost || '0.00'}
                                   </span>
                                </div>
                             </div>
@@ -288,11 +287,11 @@ export default function TallerAdmin() {
                              </div>
                              <div>
                                 <p className="text-sm font-black text-white">{new Date(h.created_at).toLocaleDateString()}</p>
-                                <p className="text-[10px] text-zinc-500 font-bold uppercase">{h.provider_type}</p>
+                                <p className="text-[10px] text-zinc-500 font-bold uppercase">{h.type}</p>
                              </div>
                           </div>
                           <div className="text-right">
-                             <p className="text-lg font-black text-lime-400">${Number(h.budget).toLocaleString()}</p>
+                             <p className="text-lg font-black text-lime-400">${Number(h.cost || 0).toLocaleString()}</p>
                              <p className="text-[9px] font-black text-zinc-500 uppercase tracking-tighter">Monto Individual</p>
                           </div>
                        </div>

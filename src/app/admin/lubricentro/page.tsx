@@ -20,7 +20,7 @@ export default function LubricentroAdmin() {
     try {
       const [vRes, sRes] = await Promise.all([
         fetch('/api/admin/flota'),
-        supabase.from('service_orders').select('*').eq('provider_type', 'lubricentro').eq('status', 'pending')
+        supabase.from('maintenance').select('*').eq('type', 'lubricentro').eq('status', 'pending')
       ]);
       
       const fleetData = await vRes.json();
@@ -45,7 +45,7 @@ export default function LubricentroAdmin() {
         body: JSON.stringify({ id, status: 'active' })
       });
       if (res.ok) {
-        await supabase.from('service_orders').update({ status: 'completed' }).eq('vehicle_id', id).eq('provider_type', 'lubricentro');
+        await supabase.from('maintenance').update({ status: 'done' }).eq('vehicle_id', id).eq('type', 'lubricentro');
         fetchData();
       }
     } catch (err) {
@@ -123,7 +123,7 @@ export default function LubricentroAdmin() {
                                   <Calendar size={12} /> Fecha
                                </div>
                                <span className="text-xs font-bold text-white">
-                                  {order?.appointment_date ? new Date(order.appointment_date).toLocaleDateString() : 'Hoy'}
+                                  {order?.date ? new Date(order.date).toLocaleDateString() : 'Hoy'}
                                </span>
                             </div>
                             <div className="p-4 bg-black/40 rounded-2xl border border-white/5 flex flex-col gap-1">
@@ -131,7 +131,7 @@ export default function LubricentroAdmin() {
                                   <DollarSign size={12} /> Costo
                                </div>
                                <span className="text-xs font-bold text-blue-400">
-                                  ${order?.budget || '0.00'}
+                                  ${order?.cost || '0.00'}
                                </span>
                             </div>
                          </div>

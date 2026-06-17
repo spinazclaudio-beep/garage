@@ -42,14 +42,14 @@ export default function ServicePortal({ config }: ServicePortalProps) {
     setSelectedVehicle(vehicle);
     setLoadingHistory(true);
     const { data } = await supabase
-      .from('service_orders')
+      .from('maintenance')
       .select('*')
       .eq('vehicle_id', vehicle.id)
       .order('created_at', { ascending: false });
-    if (data) setHistory(data);
+    if (data) setHistory(data as any);
     
-    const pending = data?.find((o: ServiceOrder) => o.status === 'pending' && o.provider_type === config.providerType);
-    setEditingOrder(pending || null);
+    const pending = data?.find((o: any) => o.status === 'pending' && o.type === config.providerType);
+    setEditingOrder(pending as any || null);
     setLoadingHistory(false);
   };
 
@@ -57,10 +57,10 @@ export default function ServicePortal({ config }: ServicePortalProps) {
     if (!editingOrder) return;
     setLoadingHistory(true);
     const { error } = await supabase
-      .from('service_orders')
+      .from('maintenance')
       .update({ 
-        appointment_date: editingOrder.appointment_date,
-        budget: editingOrder.budget,
+        date: (editingOrder as any).date,
+        cost: (editingOrder as any).cost,
         description: editingOrder.description
       })
       .eq('id', editingOrder.id);
@@ -78,7 +78,7 @@ export default function ServicePortal({ config }: ServicePortalProps) {
     
     setLoadingHistory(true);
     try {
-      await supabase.from('service_orders').update({ status: 'completed' }).eq('id', editingOrder.id);
+      await supabase.from('maintenance').update({ status: 'done' }).eq('id', editingOrder.id);
       
       await fetch('/api/admin/flota', {
         method: 'PUT',
@@ -264,7 +264,7 @@ export default function ServicePortal({ config }: ServicePortalProps) {
                                    <p className="text-[10px] text-zinc-500 font-bold uppercase">{h.description || 'Sin descripción'}</p>
                                 </div>
                              </div>
-                             <p className={`text-sm font-black ${c.text}`}>${Number(h.budget).toLocaleString()}</p>
+                             <p className={`text-sm font-black ${c.text}`}>${Number((h as any).cost || 0).toLocaleString()}</p>
                           </div>
                         ))
                       )}
