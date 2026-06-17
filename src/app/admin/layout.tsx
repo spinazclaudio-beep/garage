@@ -188,10 +188,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               
               <div className="pt-2 text-center border-t border-white/5 space-y-1">
                 <p className="text-[9px] text-zinc-600 font-bold">
-                  © 2026 Spinaz Garage. Todos los derechos reservados.
+                  © 2026 Omar Adamo. Todos los derechos reservados.
                 </p>
                 <div className="flex justify-center gap-3 text-[8px] text-zinc-500">
-                  <span className="font-black text-zinc-700">v1.0</span>
+                  <span className="font-black text-zinc-700">v1.2</span>
                 </div>
               </div>
             </div>
@@ -279,10 +279,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </button>
                     <div className="pt-2 text-center border-t border-white/5 space-y-2">
               <p className="text-[10px] text-zinc-500 font-bold tracking-tight">
-                © 2026 Spinaz Garage. Todos los derechos reservados.
+                © 2026 Omar Adamo. Todos los derechos reservados.
               </p>
               <div className="flex justify-center gap-4 text-[9px] text-zinc-500 font-medium">
-                <span className="text-zinc-600 font-black">v1.0</span>
+                <span className="text-zinc-600 font-black">v1.2</span>
               </div>
             </div>
         </div>
