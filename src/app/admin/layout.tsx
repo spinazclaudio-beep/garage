@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Users, Bell, CreditCard, LogOut, ChevronRight, Settings, ShieldAlert, Car, Navigation, User as UserIcon, ClipboardList, Gift, Wrench, Droplets, Waves } from 'lucide-react';
+import { LayoutDashboard, Users, Bell, CreditCard, LogOut, ChevronRight, Settings, ShieldAlert, Car, Navigation, User as UserIcon, ClipboardList, Gift, Wrench, Droplets, Waves } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
@@ -30,7 +30,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         getSystemSettings()
       ]);
       
-      if (pRes.data) setUserProfile(pRes.data);
+      setUserProfile(pRes.data || { full_name: session.user.email?.split('@')[0] || 'Administrador', role: 'admin' });
       if (cRes.data) setConfig(cRes.data);
       if (sRes) setSettings(sRes);
       setLoading(false);
@@ -44,6 +44,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   };
 
   const rawNavItems = [
+    { id: 'dashboard', name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
     { id: 'postulantes', name: 'Postulantes', href: '/admin/postulantes', icon: Users },
     { id: 'avisos', name: 'Avisos', href: '/admin/avisos', icon: Bell },
     { id: 'taller', name: 'Gestión Taller', href: '/admin/taller', icon: Wrench },
@@ -60,11 +61,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navItems = rawNavItems.filter(item => {
-    if (item.id === 'configuracion') return userProfile?.role === 'admin'; 
-    const c = config.find(m => m.module_name === item.id);
-    return c ? c.is_enabled : true; 
-  });
+  const isOmar = userProfile?.email?.toLowerCase().includes('omar') || userProfile?.role === 'developer';
+
+  const navItems = rawNavItems
+    .filter(item => {
+      if (item.id === 'configuracion') return isOmar; 
+      const c = config.find(m => m.module_name === item.id);
+      return c ? c.is_enabled : true; 
+    })
+    .sort((a, b) => a.name.localeCompare(b.name, 'es'));
 
   return (
     <div className="flex flex-col lg:flex-row h-screen bg-[#030303] text-white font-sans overflow-hidden selection:bg-yellow-500 selection:text-black">
@@ -188,7 +193,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               
               <div className="pt-2 text-center border-t border-white/5 space-y-1">
                 <p className="text-[9px] text-zinc-600 font-bold">
-                  © 2026 Omar Adamo. Todos los derechos reservados.
+                  © 2026 Aura Startup — Omar Adamo. Todos los derechos reservados.
                 </p>
                 <div className="flex justify-center gap-3 text-[8px] text-zinc-500">
                   <span className="font-black text-zinc-700">v1.2</span>
@@ -279,7 +284,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </button>
                     <div className="pt-2 text-center border-t border-white/5 space-y-2">
               <p className="text-[10px] text-zinc-500 font-bold tracking-tight">
-                © 2026 Omar Adamo. Todos los derechos reservados.
+                © 2026 Aura Startup — Omar Adamo. Todos los derechos reservados.
               </p>
               <div className="flex justify-center gap-4 text-[9px] text-zinc-500 font-medium">
                 <span className="text-zinc-600 font-black">v1.2</span>

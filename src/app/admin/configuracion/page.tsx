@@ -27,7 +27,8 @@ export default function ConfiguracionAdmin() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return router.push('/login');
       
-      if (session.user.id !== '734a51e1-194a-466c-b2a9-a324f8a52a27') {
+      const userEmail = session.user.email?.toLowerCase() || '';
+      if (!userEmail.includes('omar')) {
         return router.push('/admin');
       }
       

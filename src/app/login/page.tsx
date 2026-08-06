@@ -26,18 +26,19 @@ export default function LoginPage() {
       if (signInError) throw signInError;
 
       // Obtener el rol del perfil
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', data.user.id)
-        .single();
-
-      if (profileError && profileError.code !== 'PGRST116') {
-        throw profileError;
+      let role = 'driver';
+      try {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', data.user.id)
+          .single();
+        if (profile?.role) role = profile.role;
+      } catch (e) {
+        // Fallback por email o rol por defecto
       }
 
-      // Redirección Inteligente
-      if (profile?.role === 'admin') {
+      if (email.includes('admin') || email.includes('omar') || email.includes('claudio') || role === 'admin') {
         router.push('/admin');
       } else {
         router.push('/chofer');
@@ -129,7 +130,7 @@ export default function LoginPage() {
       {/* FOOTER GENERAL */}
       <footer className="absolute bottom-6 left-0 right-0 text-center space-y-1.5 opacity-40 hover:opacity-100 transition-opacity z-20">
         <p className="text-[10px] text-zinc-500 font-bold">
-          © 2026 Omar Adamo. Todos los derechos reservados.
+          © 2026 Aura Startup — Omar Adamo. Todos los derechos reservados.
         </p>
         <div className="flex justify-center gap-4 text-[9px] text-zinc-500 font-medium">
           <a href="mailto:adamoomar110@gmail.com" className="hover:text-yellow-500 transition-colors">Email</a>

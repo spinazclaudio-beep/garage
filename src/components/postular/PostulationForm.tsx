@@ -310,7 +310,7 @@ export default function PostulationForm() {
       </main>
       
       <footer className="py-12 px-6 text-center text-zinc-700 text-[10px] font-bold uppercase tracking-[0.3em]">
-        © 2026 Omar Adamo. Todos los derechos reservados. v1.2
+        © 2026 Aura Startup — Omar Adamo. Todos los derechos reservados. v1.2
       </footer>
     </div>
   );

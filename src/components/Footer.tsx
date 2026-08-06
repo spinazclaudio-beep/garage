@@ -8,7 +8,7 @@ export default function Footer({ className = '' }: FooterProps) {
   return (
     <footer className={`pt-12 pb-4 text-center border-t border-white/5 space-y-2 opacity-40 hover:opacity-100 transition-opacity ${className}`}>
       <p className="text-[10px] text-zinc-500 font-bold">
-        © 2026 Omar Adamo. Todos los derechos reservados.
+        © 2026 Aura Startup — Omar Adamo. Todos los derechos reservados.
       </p>
       <div className="flex justify-center gap-4 text-[9px] text-zinc-500 font-medium">
         <a href="mailto:adamoomar110@gmail.com" className="hover:text-yellow-500 transition-colors">Email</a>
