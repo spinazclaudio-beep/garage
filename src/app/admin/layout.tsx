@@ -61,7 +61,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const isOmar = userProfile?.email?.toLowerCase().includes('omar') || userProfile?.role === 'developer';
+  const isOmar = userProfile?.email?.toLowerCase().includes('omar') || 
+                 userProfile?.full_name?.toLowerCase().includes('omar') || 
+                 userProfile?.role === 'developer';
 
   const navItems = rawNavItems
     .filter(item => {
