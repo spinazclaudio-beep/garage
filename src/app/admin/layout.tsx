@@ -17,23 +17,28 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        window.location.href = '/login';
-        return;
-      }
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          window.location.href = '/login';
+          return;
+        }
 
-      // Fetch Profile, Config and Settings
-      const [pRes, cRes, sRes] = await Promise.all([
-        supabase.from('profiles').select('*').eq('id', session.user.id).single(),
-        supabase.from('site_config').select('*'),
-        getSystemSettings()
-      ]);
-      
-      setUserProfile(pRes.data || { full_name: session.user.email?.split('@')[0] || 'Administrador', role: 'admin' });
-      if (cRes.data) setConfig(cRes.data);
-      if (sRes) setSettings(sRes);
-      setLoading(false);
+        // Fetch Profile, Config and Settings
+        const [pRes, cRes, sRes] = await Promise.all([
+          supabase.from('profiles').select('*').eq('id', session.user.id).single().catch(() => null),
+          supabase.from('site_config').select('*').catch(() => null),
+          getSystemSettings().catch(() => null)
+        ]);
+        
+        setUserProfile(pRes?.data || { full_name: session?.user?.email?.split('@')[0] || 'Administrador', role: 'admin' });
+        if (cRes?.data) setConfig(cRes.data);
+        if (sRes) setSettings(sRes);
+      } catch (err) {
+        console.error('Error en layout:', err);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchData();
   }, []);
